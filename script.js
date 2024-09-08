@@ -22,7 +22,9 @@ async function update(data) {
 function formatFlat(d, prefix='') {
   if (d instanceof Array && d[0] instanceof Object) {
     return `${d[0].__proto__.toString()} * ${d.length}`
-  } else if (d instanceof Object && !(d instanceof Array) && !(d instanceof Function)) {
+  } else if (d instanceof Function) {
+    return d.toString().replace(/\s+/g, ' ')
+  } else if (d instanceof Object && !(d instanceof Array)) {
     return format(d, prefix + '  ').trim()
   }
   return d
@@ -33,7 +35,7 @@ function format(data, prefix='') {
     return data.length ? `[\n${data.map(d => d ? format(d, prefix + '  ') : `  ${d}`).join(',\n')}\n]` : '[]'
   }
   else if (!(data instanceof Object)) {
-    return `${prefix}${data}`
+    return `${prefix}${data.toString().replace(/\s+/g, ' ')}`
   }
   return `${prefix}{\n${prefix}${fields.map(i => `  ${i}: ${formatFlat(data[i], prefix)}`).join(`,\n${prefix}`)}\n${prefix}}`
 }
